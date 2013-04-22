@@ -1,0 +1,14 @@
+\ProvidesFile{t1ipxg.fd}[2013/04/21 v0.2]
+\DeclareFontFamily{T1}{ipxg}{}
+\DeclareFontShape{T1}{ipxg}{m}{n}{<->ipxg-r-t1}{}
+\DeclareFontShape{T1}{ipxg}{m}{sl}{<->ipxg-ro-t1}{}
+\DeclareFontShape{T1}{ipxg}{m}{it}{<->ssub*ipxg/m/sl}{}
+\DeclareFontShape{T1}{ipxg}{m}{sc}{<->ssub*ipxg/m/n}{}
+\DeclareFontShape{T1}{ipxg}{bx}{n}{<->ssub*ipxg/m/n}{}
+\DeclareFontShape{T1}{ipxg}{bx}{sl}{<->ssub*ipxg/m/sl}{}
+\DeclareFontShape{T1}{ipxg}{bx}{it}{<->ssub*ipxg/m/it}{}
+\DeclareFontShape{T1}{ipxg}{bx}{sc}{<->ssub*ipxg/m/sc}{}
+\DeclareFontShape{T1}{ipxg}{b}{n}{<->ssub*ipxg/m/n}{}
+\DeclareFontShape{T1}{ipxg}{b}{sl}{<->ssub*ipxg/m/sl}{}
+\DeclareFontShape{T1}{ipxg}{b}{it}{<->ssub*ipxg/m/it}{}
+\DeclareFontShape{T1}{ipxg}{b}{sc}{<->ssub*ipxg/m/sc}{}

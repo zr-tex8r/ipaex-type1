@@ -1,0 +1,14 @@
+\ProvidesFile{ot1ipxm.fd}[2013/04/21 v0.2]
+\DeclareFontFamily{OT1}{ipxm}{}
+\DeclareFontShape{OT1}{ipxm}{m}{n}{<->ipxm-r-ot1}{}
+\DeclareFontShape{OT1}{ipxm}{m}{sl}{<->ipxm-ro-ot1}{}
+\DeclareFontShape{OT1}{ipxm}{m}{it}{<->ssub*ipxm/m/sl}{}
+\DeclareFontShape{OT1}{ipxm}{m}{sc}{<->ssub*ipxm/m/n}{}
+\DeclareFontShape{OT1}{ipxm}{bx}{n}{<->ssub*ipxm/m/n}{}
+\DeclareFontShape{OT1}{ipxm}{bx}{sl}{<->ssub*ipxm/m/sl}{}
+\DeclareFontShape{OT1}{ipxm}{bx}{it}{<->ssub*ipxm/m/it}{}
+\DeclareFontShape{OT1}{ipxm}{bx}{sc}{<->ssub*ipxm/m/sc}{}
+\DeclareFontShape{OT1}{ipxm}{b}{n}{<->ssub*ipxm/m/n}{}
+\DeclareFontShape{OT1}{ipxm}{b}{sl}{<->ssub*ipxm/m/sl}{}
+\DeclareFontShape{OT1}{ipxm}{b}{it}{<->ssub*ipxm/m/it}{}
+\DeclareFontShape{OT1}{ipxm}{b}{sc}{<->ssub*ipxm/m/sc}{}

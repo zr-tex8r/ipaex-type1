@@ -1,0 +1,14 @@
+\ProvidesFile{ts1ipxm.fd}[2013/04/21 v0.2]
+\DeclareFontFamily{TS1}{ipxm}{}
+\DeclareFontShape{TS1}{ipxm}{m}{n}{<->ipxm-r-ts1}{}
+\DeclareFontShape{TS1}{ipxm}{m}{sl}{<->ipxm-ro-ts1}{}
+\DeclareFontShape{TS1}{ipxm}{m}{it}{<->ssub*ipxm/m/sl}{}
+\DeclareFontShape{TS1}{ipxm}{m}{sc}{<->ssub*ipxm/m/n}{}
+\DeclareFontShape{TS1}{ipxm}{bx}{n}{<->ssub*ipxm/m/n}{}
+\DeclareFontShape{TS1}{ipxm}{bx}{sl}{<->ssub*ipxm/m/sl}{}
+\DeclareFontShape{TS1}{ipxm}{bx}{it}{<->ssub*ipxm/m/it}{}
+\DeclareFontShape{TS1}{ipxm}{bx}{sc}{<->ssub*ipxm/m/sc}{}
+\DeclareFontShape{TS1}{ipxm}{b}{n}{<->ssub*ipxm/m/n}{}
+\DeclareFontShape{TS1}{ipxm}{b}{sl}{<->ssub*ipxm/m/sl}{}
+\DeclareFontShape{TS1}{ipxm}{b}{it}{<->ssub*ipxm/m/it}{}
+\DeclareFontShape{TS1}{ipxm}{b}{sc}{<->ssub*ipxm/m/sc}{}

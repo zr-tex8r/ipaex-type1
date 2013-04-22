@@ -1,0 +1,14 @@
+\ProvidesFile{c70ipxma.fd}[2013/04/21 v0.2]
+\DeclareFontFamily{C70}{ipxma}{\hyphenchar\font\m@ne}
+\DeclareFontShape{C70}{ipxma}{m}{n}{<->CJK*ipxm-r-u}{}
+\DeclareFontShape{C70}{ipxma}{m}{sl}{<->CJK*ipxm-ro-u}{}
+\DeclareFontShape{C70}{ipxma}{m}{it}{<->CJKssub*ipxma/m/sl}{}
+\DeclareFontShape{C70}{ipxma}{m}{sc}{<->CJKssub*ipxma/m/n}{}
+\DeclareFontShape{C70}{ipxma}{bx}{n}{<->CJKb*ipxm-r-u}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{bx}{sl}{<->CJKb*ipxm-ro-u}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{bx}{it}{<->CJKssub*ipxma/bx/sl}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{bx}{sc}{<->CJKssub*ipxma/bx/n}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{b}{n}{<->CJKssub*ipxma/bx/n}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{b}{sl}{<->CJKssub*ipxma/bx/sl}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{b}{it}{<->CJKssub*ipxma/bx/it}{\CJKbold}
+\DeclareFontShape{C70}{ipxma}{b}{sc}{<->CJKssub*ipxma/bx/n}{\CJKbold}

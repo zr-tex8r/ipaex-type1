@@ -1,0 +1,14 @@
+\ProvidesFile{c70ipxg.fd}[2013/04/21 v0.2]
+\DeclareFontFamily{C70}{ipxg}{\hyphenchar\font\m@ne}
+\DeclareFontShape{C70}{ipxg}{m}{n}{<->CJK*ipxg-r-u}{}
+\DeclareFontShape{C70}{ipxg}{m}{sl}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{m}{it}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{m}{sc}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{bx}{n}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{bx}{sl}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{bx}{it}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{bx}{sc}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{b}{n}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{b}{sl}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{b}{it}{<->CJKssub*ipxg/m/n}{}
+\DeclareFontShape{C70}{ipxg}{b}{sc}{<->CJKssub*ipxg/m/n}{}

@@ -1,0 +1,14 @@
+\ProvidesFile{c70ipxga.fd}[2013/04/21 v0.2]
+\DeclareFontFamily{C70}{ipxga}{\hyphenchar\font\m@ne}
+\DeclareFontShape{C70}{ipxga}{m}{n}{<->CJK*ipxg-r-u}{}
+\DeclareFontShape{C70}{ipxga}{m}{sl}{<->CJK*ipxg-ro-u}{}
+\DeclareFontShape{C70}{ipxga}{m}{it}{<->CJKssub*ipxga/m/sl}{}
+\DeclareFontShape{C70}{ipxga}{m}{sc}{<->CJKssub*ipxga/m/n}{}
+\DeclareFontShape{C70}{ipxga}{bx}{n}{<->CJKb*ipxg-r-u}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{bx}{sl}{<->CJKb*ipxg-ro-u}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{bx}{it}{<->CJKssub*ipxga/bx/sl}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{bx}{sc}{<->CJKssub*ipxga/bx/n}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{b}{n}{<->CJKssub*ipxga/bx/n}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{b}{sl}{<->CJKssub*ipxga/bx/sl}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{b}{it}{<->CJKssub*ipxga/bx/it}{\CJKbold}
+\DeclareFontShape{C70}{ipxga}{b}{sc}{<->CJKssub*ipxga/bx/n}{\CJKbold}
