@@ -60,7 +60,7 @@ t1asm -b __gen_inter.t1a %FAM%-r-%%e.pfb
 fgrep -v -e .notdef %FAM%-r-%%e.afm > __gen_inter.afm
 afm2tfm __gen_inter -u __gen_in
 tftopl __gen_in __gen_in
-perl fix-pl.pl __gen_in.pl __gen_out.pl %%e %SPWD%
+perl fix-pl.pl __gen_in.pl __gen_out.pl %PSFAM% %%e %SPWD%
 pltotf __gen_out %FAM%-r-%%e
 afm2tfm __gen_inter -u -s %SLANT% __gen_in
 tftopl __gen_in __gen_in
