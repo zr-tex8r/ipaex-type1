@@ -7,7 +7,6 @@ IPAexフォントを Type1 形式の Unicode サブフォントに変換した�
 
 パッケージ内のファイルを次のように配置する。
 
-  - `afm/*.afm`       → $TEXMF/fonts/afm/public/ipaex-type1/
   - `tfm/*.tfm`       → $TEXMF/fonts/tfm/public/ipaex-type1/
   - `type1/*.pfb`     → $TEXMF/fonts/type1/public/ipaex-type1/
   - `ipaex-type1.map` → $TEXMF/fonts/map/dvips/ipaex-type1/
