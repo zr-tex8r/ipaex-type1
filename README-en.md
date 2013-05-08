@@ -58,9 +58,11 @@ Agreement v1.0” (see the file named LICENSE for detail).
 Revision History
 ----------------
 
-  * Version 0.2a [2012/04/22]
+  * Version 0.3  [2013/05/08]
+      - (experimental) Supported vertical writing.
+  * Version 0.2a [2013/04/22]
       - Fixed spacing in some TFMs in OT1/T1/TS1 encodings.
-  * Version 0.2  [2012/04/21]
+  * Version 0.2  [2013/04/21]
       - First public version.
 
 --------------------

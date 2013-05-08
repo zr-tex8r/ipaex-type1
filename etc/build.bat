@@ -26,8 +26,8 @@ call %AUXBAT_FILE%
 rem set ALL_ENC=t1 u30
 del %AUXBAT_FILE%
 
-call :onefont ipaexm ipxm IMFCTT1
-call :onefont ipaexg ipxg IGFCTT1
+call :onefont ipaexm ipxm IMFCTT1 ipamp
+call :onefont ipaexg ipxg IGFCTT1 ipagp
 
 move /Y *.afm %AFM_DIR%
 move /Y *.tfm %TFM_DIR%
@@ -43,8 +43,13 @@ goto :EOF
 set FONT=%1
 set FAM=%2
 set PSFAM=%3
+set FONTP=%4
 if not exist %FONT%.ttf (
   echo '%FONT%.ttf' not found.
+  goto :EOF
+)
+if not exist %FONTP%.ttf (
+  echo '%FONTP%.ttf' not found.
   goto :EOF
 )
 
@@ -54,7 +59,7 @@ set SPWD=300
 call %AUXBAT_FILE%
 
 for %%e in (%ALL_ENC%) do (
-ttf2pt1 -Lipaex.code.map+%%e %FONT%.ttf %FAM%-r-%%e
+call :checkenc %%e %FAM%-r-%%e
 perl fix-type1.pl %FAM%-r-%%e.t1a __gen_inter.t1a %PSFAM% %%e
 t1asm -b __gen_inter.t1a %FAM%-r-%%e.pfb
 fgrep -v -e .notdef %FAM%-r-%%e.afm > __gen_inter.afm
@@ -70,6 +75,14 @@ del %FAM%-r-%%e_.afm %FAM%-r-%%e.t1a
 )
 
 del %AUXBAT_FILE% __gen_*.*
+
+goto :EOF
+
+:checkenc
+set FONT1=%FONT%
+set XXX=.%1
+if "%XXX%"=="%XXX:.u=.z%" set FONT1=%FONTP%
+ttf2pt1 -Lipaex.code.map+%1 %FONT1%.ttf %2
 
 goto :EOF
 

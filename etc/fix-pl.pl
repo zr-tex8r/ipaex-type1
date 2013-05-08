@@ -2,6 +2,8 @@ use strict;
 
 my ($infile, $outfile, $newpsfam, $enc, $spwd) = @ARGV;
 
+my $unienc = ($enc =~ m/^u/);
+if ($unienc) { $spwd = 0; }
 my ($s, $x) = ($spwd / 1000, 0.5);
 my $fontdimen = sprintf(<<'EOT', $s, $s/2, $s/3, $x, $s/3);
 (FONTDIMEN
@@ -85,6 +87,13 @@ EOT
       }
     } elsif (m/^\(FAMILY/) {
       print $ho ("(FAMILY $newpsfam)\n");
+    } elsif ($unienc && m/^   \(CHARWD/) {
+      print $ho ($_, <<'EOT');
+   (CHARHT R 0.88)
+   (CHARDP R 0.12)
+EOT
+    } elsif ($unienc && m/^   \(CHARHT/) {
+    } elsif ($unienc && m/^   \(CHARDP/) {
     } elsif (!m/^\(CHECKSUM/) {
       print $ho ($_);
     }

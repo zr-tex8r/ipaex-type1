@@ -550,3 +550,5 @@ ipxg-ro-uf9 IGFCTT1-uf9 ".25 SlantFont" <ipxg-r-uf9.pfb
 ipxg-ro-ufa IGFCTT1-ufa ".25 SlantFont" <ipxg-r-ufa.pfb
 ipxg-ro-ufe IGFCTT1-ufe ".25 SlantFont" <ipxg-r-ufe.pfb
 ipxg-ro-uff IGFCTT1-uff ".25 SlantFont" <ipxg-r-uff.pfb
+ipxm-r-uf0 IMFCTT1-uf0 <ipxm-r-uf0.pfb
+ipxg-r-uf0 IGFCTT1-uf0 <ipxg-r-uf0.pfb
