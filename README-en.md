@@ -58,6 +58,8 @@ Agreement v1.0” (see the file named LICENSE for detail).
 Revision History
 ----------------
 
+  * Version 0.3a [2013/05/18]
+      - (experimental) Set offset in vertical writing.
   * Version 0.3  [2013/05/08]
       - (experimental) Supported vertical writing.
   * Version 0.2a [2013/04/22]
