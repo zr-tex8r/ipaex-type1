@@ -1,4 +1,4 @@
-\ProvidesFile{c70ipxg.fd}[2013/05/18 v0.3a]
+\ProvidesFile{c70ipxg.fd}[2013/10/11 v0.3b]
 \DeclareFontFamily{C70}{ipxg}{\hyphenchar\font\m@ne}
 \DeclareFontShape{C70}{ipxg}{m}{n}{<->CJK*ipxg-r-u}{}
 \DeclareFontShape{C70}{ipxg}{m}{sl}{<->CJKssub*ipxg/m/n}{}

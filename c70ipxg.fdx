@@ -1,4 +1,4 @@
-\ProvidesFile{c70ipxg.fdx}[2013/05/18 v0.3a]
+\ProvidesFile{c70ipxg.fdx}[2013/10/11 v0.3b]
 \CJKvdef{offset}{0.54em}
 \CJKvdef{m/n/20/21}{\def\CJK@plane{f0}\selectfont\CJKsymbol{0}}
 \CJKvlet{bx/n/20/21}{m/n/20/21}

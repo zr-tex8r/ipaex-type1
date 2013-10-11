@@ -1,0 +1,60 @@
+\documentclass[a4paper]{article}
+\usepackage{CJKutf8,CJKspace,CJKpunct,ruby}
+\setlength{\parindent}{0pt}
+%% \begin{jaQuote}{<family>}...\end{jaQuote}
+\newenvironment{jaQuote}[1]{%
+  \begin{quote}\linespread{1.4}\selectfont
+  \begin{CJK*}{UTF8}{#1}\CJKtilde
+}{%
+  \end{CJK*}\end{quote}%
+}
+%% \jaRuby{<base>}{<ruby>}
+\newcommand{\jaRuby}[2]{{%
+  \renewcommand{\rubysize}{0.5}%
+  \renewcommand{\rubysep}{-0.12em}\rubyCJK
+  \setlength{\baselineskip}{1.257em}\linespread{}%
+  \ruby{#1}{#2}%
+}}
+%% sample text
+\newcommand{\jaEllip}{\Unicode{"20}{"26}}
+\newcommand{\jaSampleText}{%
+  この~FAQ~リストは、よくある質問とその答を集め、
+  役に立つようにしたものです。
+  この~FAQ~リストの構造は、以前のものと比べて
+  大幅に変更されています。%
+  \jaRuby{新}{あたら}しい構造に関しては、
+  「この~FAQ~の読み方とその構造」の
+  項目を\jaRuby{参照}{さんしょう}して下さい。
+}
+\begin{document}
+
+Family `\texttt{ipxm}' (IPAexMincho):
+\begin{jaQuote}{ipxm}
+  \jaSampleText
+\end{jaQuote}
+
+(also using \texttt{ipxm} for alphabet)
+\begin{jaQuote}{ipxm}
+  \fontfamily{ipxm}\selectfont
+  pdf{\LaTeX}~と~CJK~パッケージで日本語！
+  \par\punctstyle{plain}
+  % Japanese "Ascii Art" --- one of the few places
+  % where "hankaku-kana" is reasonably used
+  ( ˘ω˘ )ｽﾔｧ\jaEllip
+\end{jaQuote}
+
+\sffamily
+Family `\texttt{ipxg}' (IPAexGothic):
+\begin{jaQuote}{ipxg}
+  \jaSampleText
+\end{jaQuote}
+
+(also using \texttt{ipxg} for alphabet)
+\begin{jaQuote}{ipxg}
+  \fontfamily{ipxg}\selectfont
+  pdf{\LaTeX}~と~CJK~パッケージで日本語！
+  \par\punctstyle{plain}
+  ( ˘ω˘ )ｽﾔｧ\jaEllip
+\end{jaQuote}
+
+\end{document}
