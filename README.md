@@ -10,7 +10,7 @@ IPAexフォントを Type1 形式の Unicode サブフォントに変換した�
   - `tfm/*.tfm`       → $TEXMF/fonts/tfm/public/ipaex-type1/
   - `type1/*.pfb`     → $TEXMF/fonts/type1/public/ipaex-type1/
   - `ipaex-type1.map` → $TEXMF/fonts/map/dvips/ipaex-type1/
-  - `*.fd`            → $TEXMF/tex/latex/ipaex-type1/
+  - `*.fd`, `*.fdx`   → $TEXMF/tex/latex/ipaex-type1/
 
 その後で updmap で ipaex-type1.map を有効化する。
 
@@ -58,6 +58,8 @@ CJK パッケージでの使用例。
 更新履歴
 --------
 
+  * Version 0.3b [2013/10/11]
+      - ドキュメント修正。
   * Version 0.3a [2013/05/18]
       - (試験的) 縦書きオフセットを設定。
   * Version 0.3  [2013/05/08]

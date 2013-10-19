@@ -12,7 +12,7 @@ Place the files in the package as follows:
   - `tfm/*.tfm`       → $TEXMF/fonts/tfm/public/ipaex-type1/
   - `type1/*.pfb`     → $TEXMF/fonts/type1/public/ipaex-type1/
   - `ipaex-type1.map` → $TEXMF/fonts/map/dvips/ipaex-type1/
-  - `*.fd`            → $TEXMF/tex/latex/ipaex-type1/
+  - `*.fd`, `*.fdx`   → $TEXMF/tex/latex/ipaex-type1/
 
 After that, invoke updmap as usual.
 
@@ -58,6 +58,8 @@ Agreement v1.0” (see the file named LICENSE for detail).
 Revision History
 ----------------
 
+  * Version 0.3b [2013/10/11]
+      - Document correction.
   * Version 0.3a [2013/05/18]
       - (experimental) Set offset in vertical writing.
   * Version 0.3  [2013/05/08]
