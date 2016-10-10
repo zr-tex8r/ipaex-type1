@@ -1,4 +1,4 @@
-\ProvidesFile{ts1ipxm.fd}[2013/10/11 v0.3b]
+\ProvidesFile{ts1ipxm.fd}[2016/10/01 v0.4]
 \DeclareFontFamily{TS1}{ipxm}{}
 \DeclareFontShape{TS1}{ipxm}{m}{n}{<->ipxm-r-ts1}{}
 \DeclareFontShape{TS1}{ipxm}{m}{sl}{<->ipxm-ro-ts1}{}

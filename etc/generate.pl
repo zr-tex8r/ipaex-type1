@@ -7,9 +7,10 @@ use File::Copy qw( copy move );
 use Time::Local 'timelocal';
 use Data::Dump 'dump';
 my $prog_name = "generate";
-my $version = "0.2.0";
+my $version = "0.2.1";
 # settings
-our $release_date = "2016/10/01";
+our $release_date = "2016/01/01";
+our $release_version = "test";
 our $font_location = "C:/home/yato/storage/ipafonts";
 our $texucsmap_location = "C:/home/yato/work/texlabo/texucsmapping";
 our $zrotfdump_command = "zrotfdump";
@@ -370,7 +371,6 @@ sub make_map_file {
 my $copyright = <<'EOT'; chomp($copyright);
 Copyright(c) Information-technology Promotion Agency, Japan (IPA), 2003-2012. You must accept "http://ipafont.ipa.go.jp/ipa_font_license_v1.html" to use this product.
 EOT
-my $creationdate = type1_create_date($release_date, "12:00:00");
 
 sub type1_create_date {
   my ($dt, $tm) = @_;
@@ -387,6 +387,7 @@ sub fix_type1_file {
   my ($infile, $outfile, $fam, $enc) = @_; 
   info("fix type1", "$fam/$enc");
   my $psfam = $fam_info{$fam}{ps};
+  my $creationdate = type1_create_date($release_date, "12:00:00");
   local ($_); my (@ls, $oldpsfam);
   foreach (split(m/\n/, read_whole($infile))) {
     if (m|^\%!PS-AdobeFont-1\.0: (\w+)|) {
@@ -696,10 +697,10 @@ EOT
 plane u$vh_plane
 EOT
       push(@lsf, <<"EOT");
-\\ProvidesFile{$fdx_file}
+\\ProvidesFile{$fdx_file}[$release_date $release_version]
 EOT
       push(@lsa, <<"EOT");
-\\ProvidesFile{$fdxa_file}
+\\ProvidesFile{$fdxa_file}[$release_date $release_version]
 EOT
       foreach my $j (0 .. $#ent) {
         my ($uc, $gh, $gv) = @{$ent[$j]};

@@ -1,0 +1,162 @@
+% ipaex-type1.sty
+
+%% package declarations
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ipaex-type1}[2016/10/01 v0.4]
+\def\bxix@pkgname{ipaex-type1}
+
+%--------------------------------------- helpers
+
+%% \bxix@CJKfamily{<CJK-fam>}
+\def\bxix@CJKfamily#1{%
+  \ifx\CJKfamily\@undefined\else
+    \CJKfamily{#1}%
+  \fi}
+
+%% emerge \CJKhook
+\providecommand*{\CJKhook}{}
+
+%--------------------------------------- public stuffs
+
+%% \bxix@CJK@ipxm/\bxix@CJK@ipxg
+\let\bxix@CJK@ipxm\relax
+\let\bxix@CJK@ipxg\relax
+
+%%<*> \extendipaextypeI/\noextendipaextypeI
+\DeclareRobustCommand*{\extendipaextypeI}{%
+  \def\bxix@CJK@ipxm{ipxma}%
+  \def\bxix@CJK@ipxg{ipxga}}
+\DeclareRobustCommand*{\noextendipaextypeI}{%
+  \def\bxix@CJK@ipxm{ipxm}%
+  \def\bxix@CJK@ipxg{ipxg}}
+\noextendipaextypeI
+
+%%<*> \ipxmfamily/\ipxgfamily
+\DeclareRobustCommand*{\ipxmfamily}{%
+  \bxix@CJKfamily{\bxix@CJK@ipxm}%
+  \fontfamily{ipxm}\selectfont}
+\DeclareRobustCommand*{\ipxgfamily}{%
+  \bxix@CJKfamily{\bxix@CJK@ipxg}%
+  \fontfamily{ipxg}\selectfont}
+
+%%<*> \textipxm/\textipxg
+\DeclareTextFontCommand{\textipxm}{\ipxmfamily}
+\DeclareTextFontCommand{\textipxg}{\ipxgfamily}
+
+%%<*> \CJKipxmfamily/\CJKipxgfamily
+\DeclareRobustCommand*{\CJKipxmfamily}{%
+  \bxix@CJKfamily{\bxix@CJK@ipxm}}
+\DeclareRobustCommand*{\CJKipxgfamily}{%
+  \bxix@CJKfamily{\bxix@CJK@ipxg}}
+
+%%<*> \textCJKipxm/\textCJKipxg
+\DeclareRobustCommand*{\textCJKipxm}{%
+  \bxix@textCJK{\bxix@CJK@ipxm}}
+\DeclareRobustCommand*{\textCJKipxg}{%
+  \bxix@textCJK{\bxix@CJK@ipxg}}
+\long\def\bxix@textCJK@outside#1#2{%
+  \begin{CJK*}{UTF8}{#1}\relax #2\end{CJK*}}
+\long\def\bxix@textCJK@inside#1#2{%
+  \begingroup\CJKfamily{#1}#2\endgroup}
+\let\bxix@textCJK\bxix@textCJK@outside
+\g@addto@macro\CJKhook{%
+  \let\bxix@textCJK\bxix@textCJK@inside}
+\AtBeginDocument{%
+  \@ifpackageloaded{CJK}{}{%else
+    \let\bxix@textCJK\@gobble}}
+
+%--------------------------------------- CJKUsymbol
+
+%% variables
+\let\bxix@g@sfid\relax
+\let\bxix@g@high\relax
+\let\bxix@g@low\relax
+
+%%<*> \ipxmsymbol{<Unicode-point>}
+\DeclareRobustCommand*{\ipxmsymbol}{%
+  \CJKUsymbol{\bxix@CJK@ipxm}}
+\DeclareRobustCommand*{\ipxgsymbol}{%
+  \CJKUsymbol{\bxix@CJK@ipxg}}
+
+%%<*> \CJKUsymbol{<CJK-fam>}{<Unicode-point>}
+\@ifundefined{CJKUsymbol}{%
+  \DeclareRobustCommand*{\CJKUsymbol}{\bxix@CJKUSymbol}%
+}{}
+\def\bxix@CJKUSymbol@outside#1#2{%
+  \bxix@decomp@uc{#2}%
+  \bxix@decl@family{#1}{\bxix@g@sfid}%
+  \begingroup
+    \fontencoding{U}\fontfamily{#1=\bxix@g@sfid}%
+    \selectfont\symbol{\bxix@g@low}%
+  \endgroup}
+\def\bxix@CJKUSymbol@inside#1#2{%
+  \bxix@decomp@uc{#2}%
+  \begingroup
+    \CJKfamily{#1}\Unicode{\bxix@g@high}{\bxix@g@low}%
+  \endgroup}
+\let\bxix@CJKUSymbol\bxix@CJKUSymbol@outside
+\g@addto@macro\CJKhook{%
+  \let\bxix@CJKUSymbol\bxix@CJKUSymbol@inside}
+
+%% \bxix@decomp@uc{<Unicode-point>}
+\def\bxix@decomp@uc#1{%
+  \begingroup
+    \@tempcnta=#1\relax
+    \ifnum\@tempcnta<\z@ \@tempcnta\z@ \fi
+    \@tempcntb\@tempcnta \divide\@tempcntb\@cclvi
+    \ifnum\@tempcntb>\bxix@ovhigh \@tempcntb\bxix@ovhigh \fi
+    \xdef\bxix@g@high{\the\@tempcntb}%
+    \mathchardef\bxix@tmpa\@tempcntb
+    \expandafter\bxix@decomp@uc@a\meaning\bxix@tmpa\relax
+    \multiply\@tempcntb-\@cclvi \advance\@tempcntb\@tempcnta
+    \xdef\bxix@g@low{\the\@tempcntb}%
+  \endgroup}
+\mathchardef\bxix@ovhigh="1100
+\def\bxix@decomp@uc@a#1"#2\relax{%
+  \lowercase{\bxix@decomp@uc@b#24321\relax}}%
+\def\bxix@decomp@uc@b#1#2#3#4#5#6\relax{%
+  \xdef\bxix@g@sfid{%
+    \ifcase#5 \or0#1\or#1#2\or0#1#2#3\or#1#2#3#4\fi}}
+
+%% \bxix@decl@family{<CJK-fam>}{<sfid>}
+\def\bxix@decl@family#1#2{%
+  \def\bxix@fam{#1=#2}%
+  \expandafter\ifx\csname U/\bxix@fam/m/n\endcsname\relax
+    \DeclareFontFamily{U}{\bxix@fam}{}%
+    \expandafter\ifx\csname bxix@decl@family/#1\endcsname\relax
+      \bxix@decl@family@other{#1}{#2}%
+    \else \@nameuse{bxix@decl@family/#1}{#2}%
+    \fi
+  \fi}
+%% the declarations
+\def\bxix@decl@shp#1#2#3{%
+  \DeclareFontShape{U}{\bxix@fam}{#1}{#2}{<->#3}{}}
+\@namedef{bxix@decl@family/ipxm}#1{%
+  \bxix@decl@family@other{ipxm-r-u}{#1}}
+\@namedef{bxix@decl@family/ipxma}#1{%
+  \bxix@decl@shp{m}{n}{ipxm-r-u#1}%
+  \bxix@decl@shp{m}{sl}{ipxm-ro-u#1}%
+  \bxix@decl@family@cmn}
+\@namedef{bxix@decl@family/ipxg}#1{%
+  \bxix@decl@family@other{ipxg-r-u}{#1}}
+\@namedef{bxix@decl@family/ipxga}#1{%
+  \bxix@decl@shp{m}{n}{ipxg-r-u#1}%
+  \bxix@decl@shp{m}{sl}{ipxg-ro-u#1}%
+  \bxix@decl@family@cmn}
+\def\bxix@decl@family@other#1#2{%
+  \bxix@decl@shp{m}{n}{#1#2}%
+  \bxix@decl@shp{m}{sl}{ssub*\bxix@fam/m/n}%
+  \bxix@decl@family@cmn}
+\def\bxix@decl@family@cmn{%
+  \bxix@decl@shp{m}{it}{ssub*\bxix@fam/m/sl}%
+  \bxix@decl@shp{m}{sc}{ssub*\bxix@fam/m/n}%
+  \bxix@decl@shp{bx}{it}{ssub*\bxix@fam/bx/sl}%
+  \bxix@decl@shp{bx}{sc}{ssub*\bxix@fam/bx/n}%
+  \bxix@decl@shp{b}{n}{ssub*\bxix@fam/bx/n}%
+  \bxix@decl@shp{b}{sl}{ssub*\bxix@fam/bx/sl}%
+  \bxix@decl@shp{b}{it}{ssub*\bxix@fam/bx/it}%
+  \bxix@decl@shp{b}{sc}{ssub*\bxix@fam/bx/sc}}
+
+%--------------------------------------- done
+\endinput
+%% EOF

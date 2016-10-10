@@ -1,4 +1,4 @@
-\ProvidesFile{c70ipxma.fdx}
+\ProvidesFile{c70ipxma.fdx}[2016/10/01 v0.4]
 \CJKvdef{m/n/20/21}{\def\CJK@plane{f0}\selectfont\CJKsymbol{0}}
 \CJKvlet{bx/n/20/21}{m/n/20/21}
 \CJKvdef{m/n/20/22}{\def\CJK@plane{f0}\selectfont\CJKsymbol{1}}
