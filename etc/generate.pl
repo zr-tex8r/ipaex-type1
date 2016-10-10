@@ -15,8 +15,9 @@ our $texucsmap_location = "C:/home/yato/work/texlabo/texucsmapping";
 our $zrotfdump_command = "zrotfdump";
 our $input_location = ".";
 our $output_location = "..";
-our @encoding_filter;
+our @encoding_filter = ();
 our $extension_vertical = 1;
+our $extension_nonbmp = 1;
 our $extension_snowman = 1;
 # internal settings
 my @family_info = (
@@ -46,14 +47,15 @@ my $pltotf = "pltotf";
 
 my (@family, %fam_info);
 my ($orig_cwd, @encoding, @generated, @map_line);
-my (%extension, %extd_enc);
+my (%extension, %extd_enc, @nonbmp_encoding);
 
 sub main {
   initialize(@ARGV);
   generate_codemap();
   filter_encodings();
   process_main();
-  process_vertical();
+  ($extension_vertical) and process_vertical();
+  ($extension_nonbmp) and process_nonbmp();
   postprocess();
 }
 
@@ -121,13 +123,14 @@ sub postprocess {
     move($_, "$dest/$_") or error("cannot move file", $_);
   }
   #
-  unlink("ipaex.code.map", glob("$temp-*.*"));
+  unlink($cdmap_file, glob("$temp-*.*"));
 }
 
 sub filter_encodings {
   (@encoding_filter) or return;
   my %chk = map { $_, 1 } (@encoding_filter);
   @encoding = grep { $chk{$_} } (@encoding);
+  @nonbmp_encoding = grep { $chk{$_} } (@nonbmp_encoding);
 }
 
 #--------------------------------------- the batch
@@ -144,21 +147,21 @@ sub process_family {
   info("process family", $fam, $psfam);
   my $fontx = "$font_location/" . $fam_info{$fam}{ex} . ".ttf";
   my $fontp = "$font_location/" . $fam_info{$fam}{p} . ".ttf";
-  run("$ttf2pt1 -Lipaex.code.map+u00 $fontx $temp-1");
-  my $spwd = $default_space_width;
-  $_ = read_whole("$temp-1.afm");
-  ($_) = (m/^C 160 ; WX (\d+)/m) and $spwd = $_;
-  info("space width is", $spwd);
+  my $spwd = get_space_width($fontx);
   #
-  foreach my $enc (@encoding) {
+  L1:foreach my $enc (@encoding) {
     my $font = (ucs_encoding($enc)) ? $fontx : $fontp;
     my $rnam = "$fam-r-$enc";
     info("process shape", $rnam);
-    run("$ttf2pt1 -Lipaex.code.map+$enc $font $rnam");
+    run(qq'$ttf2pt1 -L$cdmap_file+$enc $font $rnam');
     ($extd_enc{$enc}) and apply_extension($rnam);
     fix_type1_file("$rnam.t1a", "$temp-1.t1a", $fam, $enc);
     run("$t1asm -b $temp-1.t1a $rnam.pfb");
-    $_ = read_whole("$rnam.afm"); s/^.*\.notdef.*$//gm;
+    $_ = read_whole("$rnam.afm"); my $p = s/^.*\.notdef.*$//gm;
+    if ($p == 256) {
+      unlink("$rnam.t1a", "$rnam.pfb", "$rnam.afm");
+      alert("empty afm", "$rnam.afm"); next L1;
+    }
     write_whole("$temp-2.afm", $_);
     run("$afm2tfm $temp-2 -u $temp-2");
     run("$tftopl $temp-2 $temp-2");
@@ -170,11 +173,22 @@ sub process_family {
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $snam");
-    # donw
+    # done
     push(@generated, "$rnam.afm", "$rnam.tfm", "$rnam.pfb");
     push(@generated, "$snam.tfm");
     unlink("$rnam.t1a");
   }
+}
+
+
+sub get_space_width {
+  my ($fontx) = @_; local ($_);
+  my $spwd = $default_space_width;
+  run("$ttf2pt1 -L$cdmap_file+u00 $fontx $temp-1");
+  $_ = read_whole("$temp-1.afm");
+  ($_) = (m/^C 160 ; WX (\d+)/m) and $spwd = $_;
+  info("space width is", $spwd);
+  return $spwd;
 }
 
 sub apply_extension {
@@ -228,7 +242,8 @@ sub generate_codemap {
 
 sub glyphname {
   local ($_) = @_;
-  return $agl_map{$_} || sprintf("uni%04X", $_);
+  return $agl_map{$_} ||
+    sprintf(($_ < 0x10000) ? "uni%04X" : "u%X", $_);
 }
 
 sub prepare_for_codemap {
@@ -290,21 +305,32 @@ sub ucsvector {
 sub prepare_uvector {
   foreach my $enc (
     @tex_encoding,
-    map { ucs_enc_name($_) } (0 .. 255)
+    map { ucs_enc_name($_) } (0 .. 0xFF)
   ) {
-    my $ok;
-    my @vec = map {
-      if (exists $extension{$_}) {
-        $ok = 1; $extd_enc{$enc} = 1; $extension{$_}[0]
-      } elsif (exists $ipaex_cmap{$_}) {
-        $ok = 1; $_
-      } else { undef }
-    } (@{ucsvector($enc)});
-    if ($ok) {
-      push(@encoding, $enc);
-      $ipaex_uvector{$enc} = \@vec;
-    }
+    my $vec = make_uvector($enc) or next;
+    push(@encoding, $enc);
+    $ipaex_uvector{$enc} = $vec;
   }
+  foreach my $enc (
+    map { ucs_enc_name($_) } (0x200 .. 0x2FF)
+  ) {
+    my $vec = make_uvector($enc) or next;
+    push(@nonbmp_encoding, $enc);
+    $ipaex_uvector{$enc} = $vec;
+  }
+}
+
+sub make_uvector {
+  my ($enc) = @_; local ($_); my $ok;
+  my @vec = map {
+    if (exists $extension{$_}) {
+      $ok = 1; $extd_enc{$enc} = 1; $extension{$_}[0]
+    } elsif (exists $ipaex_cmap{$_}) {
+      $ok = 1; $_
+    } else { undef }
+  } (@{ucsvector($enc)});
+  ($ok) or return;
+  return \@vec;
 }
 
 sub make_cdmap_file {
@@ -312,12 +338,12 @@ sub make_cdmap_file {
   my @ls = (<<'EOT');
 # ipaex-tex.map
 EOT
-  foreach my $enc (@encoding) {
+  foreach my $enc (@encoding, @nonbmp_encoding) {
     push(@ls, "plane $enc\n");
     my $vec = $ipaex_uvector{$enc};
     for my $cc (0 .. 0xff) {
       my $uc = $vec->[$cc] or next;
-      $_ = sprintf("!%02X U+%04X %s\n", $cc, $uc, glyphname($uc));
+      $_ = sprintf("!%02X U+%04X %s\n", $cc, $uc & 0xFFFF, glyphname($uc));
       push(@ls, $_);
     }
   }
@@ -329,10 +355,10 @@ sub make_map_file {
   my @ls;
   foreach my $fam (@family) {
     my $fn = $fam_info{$fam}{ps}; my $slant = $slant_ratio;
-    foreach my $enc (@encoding) {
+    foreach my $enc (@encoding, @nonbmp_encoding) {
       push(@ls, "$fam-r-$enc $fn-$enc <$fam-r-$enc.pfb");
     }
-    foreach my $enc (@encoding) {
+    foreach my $enc (@encoding, @nonbmp_encoding) {
       push(@ls, "$fam-ro-$enc $fn-$enc \"$slant SlantFont\" <$fam-r-$enc.pfb");
     }
   }
@@ -493,6 +519,94 @@ EOT
   write_whole($outfile, join("\n", @ls, ""));
 }
 
+#--------------------------------------- nonbmp hack
+
+my $sh_pid = 99;
+my $sh_eid = 0;
+
+sub process_nonbmp {
+  info("process NONBMP");
+  (@nonbmp_encoding) or return;
+  foreach my $fam (@family) {
+    process_family_nonbmp($fam);
+  }
+}
+
+sub process_family_nonbmp {
+  my ($fam) = @_; local ($_);
+  my $psfam = $fam_info{$fam}{ps};
+  info("process family", $fam, $psfam);
+  my $nfont = $fam_info{$fam}{ex};
+  my $vfont = "$nfont-v";
+  my $pfont = "$font_location/$nfont.ttf";
+  my $spwd = get_space_width($pfont);
+  (glob("$vfont*.*"))
+    and error("existing files must not have that name", "$vfont*.*");
+  #
+  copy($pfont, "$temp-0.ttf") or error("copy failure");
+  unlink(glob("$temp*.ttx"));
+  run("ttx -i -t cmap $temp-0.ttf");
+  (-f "$temp-0.ttx") or error("ttx failure", "$temp-0.ttx");
+  nonbmp_merge("$temp-0.ttx", "$vfont.ttx", $fam);
+  run("ttx -m $temp-0.ttf $vfont.ttx");
+  (-f "$vfont.ttf") or error("ttx failure", "vfont.ttf");
+  #
+  L1:foreach my $enc (@nonbmp_encoding) {
+    my $rnam = "$fam-r-$enc";
+    info("process shape", $rnam);
+    run(qq'$ttf2pt1 -L"$cdmap_file+pid=$sh_pid,eid=$sh_eid,$enc" ' .
+        "$vfont.ttf $rnam");
+    #($extd_enc{$enc}) and apply_extension($rnam);
+    fix_type1_file("$rnam.t1a", "$temp-1.t1a", $fam, $enc);
+    run("$t1asm -b $temp-1.t1a $rnam.pfb");
+    $_ = read_whole("$rnam.afm"); my $p = s/^.*\.notdef.*$//gm;
+    info($p, $rnam);
+    if ($p == 256) {
+      unlink("$rnam.t1a", "$rnam.pfb", "$rnam.afm");
+      alert("empty afm", "$rnam.afm"); die;next L1;
+    }
+    write_whole("$temp-2.afm", $_);
+    run("$afm2tfm $temp-2 -u $temp-2");
+    run("$tftopl $temp-2 $temp-2");
+    fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
+    run("$pltotf $temp-3 $rnam");
+    # slant
+    my $snam = "$fam-ro-$enc";
+    run("$afm2tfm $temp-2 -u -s $slant_ratio $temp-2");
+    run("$tftopl $temp-2 $temp-2");
+    fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
+    run("$pltotf $temp-3 $snam");
+    # done
+    push(@generated, "$rnam.afm", "$rnam.tfm", "$rnam.pfb");
+    push(@generated, "$snam.tfm");
+    unlink("$rnam.t1a");
+  }
+  unlink(glob("$vfont*.*"));
+}
+
+sub nonbmp_merge {
+  my ($ttx_in_file, $ttx_out_file, $fam) = @_;
+  local ($_); my (@lst);
+  foreach (split(m/\n/, read_whole($ttx_in_file))) {
+    push(@lst, "$_\n");
+    if (m/^\s*<tableVersion/) {
+      push(@lst, <<"EOT");
+<cmap_format_4 platformID="$sh_pid" platEncID="$sh_eid" language="0">
+EOT
+      foreach my $uc (0x20000 .. 0x2FFFF) {
+        my $gn = $ipaex_gname{$uc} or next;
+        my $uc1 = $uc & 0xFFFF;
+        push(@lst, sprintf(
+            qq'<map code="0x%X" name="%s"/>\n', $uc1, $gn));
+      }
+      push(@lst,  <<'EOT');
+</cmap_format_4>
+EOT
+    }
+  }
+  write_whole($ttx_out_file, join("", @lst));
+}
+
 #--------------------------------------- vertical hack
 
 my $vh_pid = 99;
@@ -501,7 +615,6 @@ my $vh_plane = "f0";
 my %vert_data;
 
 sub process_vertical {
-  ($extension_vertical) or return;
   info("process VERTICAL");
   prepare_vert_data();
   foreach my $fam (@family) {
@@ -818,10 +931,10 @@ sub upath {
 
 sub ucs_enc_name {
   local ($_) = @_;
-  return sprintf("u%02x", $_);
+  return sprintf(($_ < 0x100) ? "u%02x" : "u%04x", $_);
 }
 sub ucs_encoding {
-  local ($_) = @_; ($_) = m/^u([0-9a-f]{2,3})$/;
+  local ($_) = @_; ($_) = m/^u([0-9a-f]{2,4})$/;
   return (defined $_) ? (hex($_), 1) : (undef, 0);
 }
 
