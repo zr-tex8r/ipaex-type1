@@ -17,6 +17,7 @@
 }}
 %% sample text
 \newcommand{\jaEllip}{\Unicode{"20}{"26}}
+\newcommand{\jaSnowman}{\Unicode{"26}{"03}}
 \newcommand{\jaSampleText}{%
   この~FAQ~リストは、よくある質問とその答を集め、
   役に立つようにしたものです。
@@ -36,11 +37,17 @@ Family `\texttt{ipxm}' (IPAexMincho):
 (also using \texttt{ipxm} for alphabet)
 \begin{jaQuote}{ipxm}
   \fontfamily{ipxm}\selectfont
-  pdf{\LaTeX}~と~CJK~パッケージで日本語！
+  pdf{\LaTeX}~と~CJK~パッケージで日本語\jaSnowman！
   \par\punctstyle{plain}
   % Japanese "Ascii Art" --- one of the few places
   % where "hankaku-kana" is reasonably used
   ( ˘ω˘ )ｽﾔｧ\jaEllip
+\end{jaQuote}
+
+Use of non-BMP characters
+\begin{jaQuote}{ipxm}
+  %'𠮟' = U+20B9F
+  猫𠮟るより猫を囲え。
 \end{jaQuote}
 
 \sffamily
@@ -52,9 +59,14 @@ Family `\texttt{ipxg}' (IPAexGothic):
 (also using \texttt{ipxg} for alphabet)
 \begin{jaQuote}{ipxg}
   \fontfamily{ipxg}\selectfont
-  pdf{\LaTeX}~と~CJK~パッケージで日本語！
+  pdf{\LaTeX}~と~CJK~パッケージで日本語\jaSnowman！
   \par\punctstyle{plain}
   ( ˘ω˘ )ｽﾔｧ\jaEllip
+\end{jaQuote}
+
+Use of non-BMP characters
+\begin{jaQuote}{ipxg}
+  猫𠮟るより猫を囲え。
 \end{jaQuote}
 
 \end{document}

@@ -1,4 +1,4 @@
-\ProvidesFile{ot1ipxg.fd}[2013/10/11 v0.3b]
+\ProvidesFile{ot1ipxg.fd}[2016/10/01 v0.4]
 \DeclareFontFamily{OT1}{ipxg}{}
 \DeclareFontShape{OT1}{ipxg}{m}{n}{<->ipxg-r-ot1}{}
 \DeclareFontShape{OT1}{ipxg}{m}{sl}{<->ipxg-ro-ot1}{}
