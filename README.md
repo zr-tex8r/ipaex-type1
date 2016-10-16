@@ -1,11 +1,13 @@
-ipaex-type1 パッケージ
-=====================
+ipaex-type1 PACKAGE
+===================
 
-IPAexフォントを Type1 形式の Unicode サブフォントに変換したもの。
+This package contains the IPAex Fonts converted into Unicode subfonts
+in Type1 format, which is most suitable for use with the CJK package.
+Font conversion was done with ttf2pt1.
 
-### インストール
+### Installation
 
-パッケージ内のファイルを次のように配置する。
+Place the files in the package as follows:
 
   - `tfm/*.tfm`       → $TEXMF/fonts/tfm/public/ipaex-type1/
   - `type1/*.pfb`     → $TEXMF/fonts/type1/public/ipaex-type1/
@@ -13,25 +15,23 @@ IPAexフォントを Type1 形式の Unicode サブフォントに変換した�
   - `*.sty`           → $TEXMF/tex/latex/ipaex-type1/
   - `*.fd`, `*.fdx`   → $TEXMF/tex/latex/ipaex-type1/
 
-その後で updmap で ipaex-type1.map を有効化する。
+After that, invoke updmap as usual.
 
     updmap --enable Map ipaex-type1.map
 
-（W32TeX では `updmap --add ipaex-type1.map` ）
+### Usage in LaTeX
 
-### 使用法
+After installation, you can use the following two families,
 
-インストールが済むと、
+  * ipxm = IPAexMincho
+  * ipxg = IPAexGothic
 
-  * OT1、T1、TS1 のエンコーディング
-  * CJK パッケージの `UTF8` エンコーディング（C70）
+in the folloing encodings:
 
-の各々について以下のファミリが使えるようになる。
+  * OT1 / T1 / TS1 encodings
+  * `UTF8` encoding of the CJK package (internally called C70)
 
-  * `ipxm` : IPAex明朝
-  * `ipxg` : IPAexゴシック
-
-欧文での使用例。
+An example of using an alphabetic encoding.
 
     \documentclass{article}
     \renewcommand{\rmdefault}{ipxm}
@@ -40,9 +40,9 @@ IPAexフォントを Type1 形式の Unicode サブフォントに変換した�
     \textsf{Test}\quad Hello, {\TeX} world!
     \end{document}
 
-CJK パッケージでの使用例。
+An example of using the CJK package.
 
-    % 文字コードはUTF-8
+    % encoded in UTF-8
     \documentclass{article}
     \usepackage{CJK}
     \begin{document}
@@ -51,83 +51,86 @@ CJK パッケージでの使用例。
     \end{CJK*}
     \end{document}
 
-ipaex-type1 バンドル 0.4 版以降では、フォントの使用をより簡単にするため
-の同名の LaTeX パッケージが付属している。
+In addition, the ipaex-type1 bundle of version 0.4 or later provides a
+package (also called “ipaex-type1”) which enables users to use the
+fonts more easily.
 
-### ライセンス
+### License
 
-「IPAフォントライセンスv1.0」が適用される。
-（内容は LICENSE ファイルを参照。）
+This package is distributed under the “IPA Font License
+Agreement v1.0” (see the file named LICENSE for detail).
 
-ipaex-type1 パッケージ
-----------------------
+ipaex-type1 Package
+-------------------
 
-### パッケージ読込
+### Loading
 
-パッケージオプションは存在しない。
+There are no package options available.
 
     \usepackage{ipaex-type1}
 
-### 使用法
+### Usage
 
-以下の記述では CJK パッケージが読み込まれていることを仮定する。
+The description assumes that the CJK package is employed.
 
-  * `\ipxmfamily`／`\ipxgfamily`： CJK と非 CJK の両方のフォントファミリ
-    を `ipxm`／`ipxg` に変更する。
-  * `\textipxm{<text>}`／`\textipxg{<text>}`： 前項のテキスト命令版。
-  * `\CJKipxmfamily`／`\CJKipxgfamily`: CJK ファミリのみを `ipxm`／`ipxg`
-    に変更する。
-  * `\textCJKipxm{<text>}`／`\textCJKipxg{<text>}`： テキスト命令版。
-  * `\ipxmsymbol{<Unicode-point>}`／`\ipxgsymbol{<Unicode-point>}`：
-    指定の Unicode 値をもつ CJK 文字を CJK ファミリ `ipxm`／`ipxg` で
-    出力する。例えば、`\ipxmsymbol{"2603}` は次のコードと同等である：
-    `{\CJKfamily{ipxm}\Unicode{"26}{"03}}`
+  * `\ipxmfamily`/`\ipxgfamily`: Changes both the CJK and non-CJK
+    families to `ipxm`/`ipxg`.
+  * `\textipxm{<text>}`/`\textipxg{<text>}`: The text-command version of
+    the above.
+  * `\CJKipxmfamily`/`\CJKipxgfamily`: Changes only the CJK family to
+    `ipxm`/`ipxg`. (It is the same as `\CJKfamily{ipxm}` etc.)
+  * `\textCJKipxm{<text>}`/`\textCJKipxg{<text>}`: The text-command
+    version of the above.
+  * `\ipxmsymbol{<Unicode-point>}`/`\ipxgsymbol{<Unicode-point>}`:
+    Prints a CJK character with the given Unicode point using CJK family
+    `ipxm`/`ipxg`. For example, `\ipxmsymbol{"2603}` has the same effect
+    as `{\CJKfamily{ipxm}\Unicode{"26}{"03}}`.
 
-CJK パッケージが読み込まれていない、あるいは `CJK(*)` 環境の外で命令が
-呼び出された場合は、一般的には、CJK ファミリに対する効果を除外した動作
-になる。例えば、`\ipxmfamily` は非 CJK ファミリ（それしかない）を `ipxm`
-に変更し、また `\CJKipxgfamily` は何の効果も持たない。ただしこの一般規則
-には幾つかの例外があり、それを以下で解説する。
+When the CJK package is not loaded, or the commands are invoked outside
+`CJK(*)` environments, the effect on CJK families are generally omitted.
+Namely, `\ipxmfamily` will change the (sole, non-CJK) family to `ipxm`,
+and `\CJKipxgfamily` will do nothing. There are however some exceptions
+to the general rule, which are described in the following subsections.
 
-### `\textCJKipxm`／`\textCJKipxg` 命令
+### `\textCJKipxm`/`\textCJKipxg` commands
 
-CJK パッケージが読込済でかつ `CJK` 環境の外で `\textCJKipxm` が呼ばれた
-という場合、その引数は自動的に `CJK*` 環境に入れたと見なされる。例えば：
-
+When the CJK package is loaded and `\textCJKipxm` is invoked outside
+`CJK` environments, then the argument text will be automatically placed
+in a temporary `CJK*` environment. The example:
 
     Japan (\textCJKipxm{日本})
 
-は以下と同等になる：
+has the same effect as:
 
     Japan (\begin{CJK*}{UTF8}{ipxm}日本\end{CJK*})
 
-### `\ipxmsymbol`／`\ipxgsymbol` 命令
+### `\ipxmsymbol`/`\ipxgsymbol` commands
 
-これらの命令は `CJK` 環境の外、および CJK パッケージを使用しない場合でも
-利用できる。その場合、出力の CJK 文字は組版上は記号と同じ扱いになる。
-例えば、文書中に現れる日本語の単語が「日本」一つしかないという場合、CJK
-パッケージを使わずに以下のように書いて済ませることができる：
+These two commands can be used outside `CJK` environments and even
+without the CJK package. In that case, the CJK characters are treated
+like symbol characters. For example, if you need only to write a single
+Japanese word “日本” in your document, then you can dispense with the
+CJK package and write as follows:
 
     Japan (\ipxmsymbol{"65E5}\ipxmsymbol{"672C})
 
-更新履歴
---------
+Revision History
+----------------
 
   * Version 0.4  ‹2016/10/01›
-      - 変換元の IPAex フォントのバージョンを 003.01 版に更新した。
-      - BMP 外の文字に対応した。
-      - 補助の LaTeX パッケージを作製した。
+      - Converted from the version 003.01 of the IPAex Fonts.
+      - Supported non-BMP characters.
+      - Provided a LaTeX package.
   * Version 0.3b ‹2013/10/11›
-      - ドキュメント修正。
+      - Document correction.
   * Version 0.3a ‹2013/05/18›
-      - (試験的) 縦書きオフセットを設定。
+      - (experimental) Set offset in vertical writing.
   * Version 0.3  ‹2013/05/08›
-      - (試験的) 縦書きに対応した。
+      - (experimental) Supported vertical writing.
   * Version 0.2a ‹2013/04/22›
-      - 欧文エンコーディング（OT1/T1/TS1）の一部の TFM の空白量が
-        ゼロになっていたのを修正。
+      - Fixed spacing in some TFMs in OT1/T1/TS1 encodings.
   * Version 0.2  ‹2013/04/21›
-      - 最初の公開版。
+      - First public version.
 
 --------------------
 Takayuki YATO (aka. "ZR")  
