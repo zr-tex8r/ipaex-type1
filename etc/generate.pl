@@ -78,6 +78,7 @@ sub initialize {
   while (my ($k, $v) = splice(@family_info, 0, 2)) {
     $fam_info{$k} = $v; push(@family, $k);
   }
+  $ENV{TTFONTS} = "$font_location;";
   # environment check
   foreach (
     $font_location, $texucsmap_location, $input_location,
@@ -551,6 +552,7 @@ sub process_family_nonbmp {
   nonbmp_merge("$temp-0.ttx", "$vfont.ttx", $fam);
   run("ttx -m $temp-0.ttf $vfont.ttx");
   (-f "$vfont.ttf") or error("ttx failure", "vfont.ttf");
+  unlink("$temp-0.ttf");
   #
   L1:foreach my $enc (@nonbmp_encoding) {
     my $rnam = "$fam-r-$enc";
@@ -654,6 +656,7 @@ unlink(glob("$temp-*.*"));
       $fdx_file, $fdxa_file);
   run("ttx -m $temp-0.ttf $vfont.ttx");
   (-f "$vfont.ttf") or error("ttx failure", "vfont.ttf");
+  unlink("$temp-0.ttf");
   #
   my $rnam = "$fam-r-u$vh_plane";
   run(qq'$ttf2pt1 -L"$vcdmap_file+pid=$vh_pid,eid=$vh_eid,$enc" ' .
@@ -698,9 +701,11 @@ plane u$vh_plane
 EOT
       push(@lsf, <<"EOT");
 \\ProvidesFile{$fdx_file}[$release_date $release_version]
+\\CJKvdef{offset}{0.54em}
 EOT
       push(@lsa, <<"EOT");
 \\ProvidesFile{$fdxa_file}[$release_date $release_version]
+\\CJKvdef{offset}{0.54em}
 EOT
       foreach my $j (0 .. $#ent) {
         my ($uc, $gh, $gv) = @{$ent[$j]};

@@ -1,4 +1,4 @@
-\ProvidesFile{c70ipxga.fd}[2016/10/01 v0.4]
+\ProvidesFile{c70ipxga.fd}[2016/10/20 v0.4a]
 \DeclareFontFamily{C70}{ipxga}{\hyphenchar\font\m@ne}
 \DeclareFontShape{C70}{ipxga}{m}{n}{<->CJK*ipxg-r-u}{}
 \DeclareFontShape{C70}{ipxga}{m}{sl}{<->CJK*ipxg-ro-u}{}

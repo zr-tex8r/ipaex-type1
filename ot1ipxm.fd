@@ -1,4 +1,4 @@
-\ProvidesFile{ot1ipxm.fd}[2016/10/01 v0.4]
+\ProvidesFile{ot1ipxm.fd}[2016/10/20 v0.4a]
 \DeclareFontFamily{OT1}{ipxm}{}
 \DeclareFontShape{OT1}{ipxm}{m}{n}{<->ipxm-r-ot1}{}
 \DeclareFontShape{OT1}{ipxm}{m}{sl}{<->ipxm-ro-ot1}{}
