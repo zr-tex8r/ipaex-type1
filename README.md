@@ -117,6 +117,8 @@ CJK package and write as follows:
 Revision History
 ----------------
 
+  * Version 0.4a ‹2016/10/20›
+      - Bug fix.
   * Version 0.4  ‹2016/10/01›
       - Converted from the version 003.01 of the IPAex Fonts.
       - Supported non-BMP characters.
