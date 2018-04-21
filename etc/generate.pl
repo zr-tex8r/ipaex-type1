@@ -7,7 +7,7 @@ use File::Copy qw( copy move );
 use Time::Local 'timelocal';
 use Data::Dump 'dump';
 my $prog_name = "generate";
-my $version = "0.2.1";
+my $version = "0.2.2";
 # settings
 our $release_date = "2016/01/01";
 our $release_version = "test";
@@ -31,10 +31,12 @@ my $default_space_width = 300;
 my $afm_dir = "afm";
 my $tfm_dir = "tfm";
 my $pfb_dir = "type1";
+my $enc_dir = "enc";
 my $aglfn_file = "aglfn.txt";
 my $map_file = "ipaex-type1.map";
 my $cdmap_file = "ipaex.code.map";
 my $vert_data_file = "ipaex-vert.tsv";
+my $enc_prefix = "ipxt1-";
 my $temp = "__gen".$$."x";
 my $kpsewhich = "kpsewhich";
 my $ttf2pt1 = "ttf2pt1";
@@ -48,7 +50,7 @@ my $pltotf = "pltotf";
 
 my (@family, %fam_info);
 my ($orig_cwd, @encoding, @generated, @map_line);
-my (%extension, %extd_enc, @nonbmp_encoding);
+my (%extension, %extd_enc, @nonbmp_encoding, %encfile_done);
 
 sub main {
   initialize(@ARGV);
@@ -110,17 +112,19 @@ sub postprocess {
   push(@generated, $map_file);
   # install files
   info("clean up output locations");
-  foreach ($afm_dir, $tfm_dir, $pfb_dir) {
+  foreach ($afm_dir, $tfm_dir, $pfb_dir, $enc_dir) {
     (-d "$oloc/$_") or mkdir("$oloc/$_");
   }
   unlink(glob("$oloc/$afm_dir/*.afm"));
   unlink(glob("$oloc/$tfm_dir/*.tfm"));
   unlink(glob("$oloc/$pfb_dir/*.pfb"));
+  unlink(glob("$oloc/$enc_dir/*.enc"));
   foreach (@generated) {
     my $dest = $oloc;
     if    (m/\.afm$/) { $dest .= "/$afm_dir"; }
     elsif (m/\.tfm$/) { $dest .= "/$tfm_dir"; }
     elsif (m/\.pfb$/) { $dest .= "/$pfb_dir"; }
+    elsif (m/\.enc$/) { $dest .= "/$enc_dir"; }
     info("install file", "$dest/$_");
     move($_, "$dest/$_") or error("cannot move file", $_);
   }
@@ -133,6 +137,16 @@ sub filter_encodings {
   my %chk = map { $_, 1 } (@encoding_filter);
   @encoding = grep { $chk{$_} } (@encoding);
   @nonbmp_encoding = grep { $chk{$_} } (@nonbmp_encoding);
+}
+
+sub make_enc_file {
+  my ($fafm, $encs) = @_;
+  local $_ = read_whole($fafm);
+  my @vec = m/;\s+N\s+(\S+)\s+;/g;
+  (scalar(@vec) == 256) or die;
+  $_ = "/$encs [\n/" . join("\n/", @vec) . "\n] def\n";
+  write_whole("$encs.enc", $_);
+  push(@generated, "$encs.enc");
 }
 
 #--------------------------------------- the batch
@@ -175,13 +189,17 @@ sub process_family {
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $snam");
+    # enc file
+    if (!$encfile_done{$enc}) {
+      make_enc_file("$rnam.afm", "$enc_prefix$enc");
+      $encfile_done{$enc} = 1;
+    }
     # done
     push(@generated, "$rnam.afm", "$rnam.tfm", "$rnam.pfb");
     push(@generated, "$snam.tfm");
     unlink("$rnam.t1a");
   }
 }
-
 
 sub get_space_width {
   my ($fontx) = @_; local ($_);
@@ -358,10 +376,12 @@ sub make_map_file {
   foreach my $fam (@family) {
     my $fn = $fam_info{$fam}{ps}; my $slant = $slant_ratio;
     foreach my $enc (@encoding, @nonbmp_encoding) {
-      push(@ls, "$fam-r-$enc $fn-$enc <$fam-r-$enc.pfb");
+      local $_ = "$enc_prefix$enc";
+      push(@ls, "$fam-r-$enc $fn-$enc \"$_ ReEncodeFont\" <$_.enc <$fam-r-$enc.pfb");
     }
     foreach my $enc (@encoding, @nonbmp_encoding) {
-      push(@ls, "$fam-ro-$enc $fn-$enc \"$slant SlantFont\" <$fam-r-$enc.pfb");
+      local $_ = "$enc_prefix$enc";
+      push(@ls, "$fam-ro-$enc $fn-$enc \"$slant SlantFont $_ ReEncodeFont\" <$_.enc <$fam-r-$enc.pfb");
     }
   }
   push(@map_line, @ls);
@@ -579,6 +599,10 @@ sub process_family_nonbmp {
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $snam");
+    if (!$encfile_done{$enc}) {
+      make_enc_file("$rnam.afm", "$enc_prefix$enc");
+      $encfile_done{$enc} = 1;
+    }
     # done
     push(@generated, "$rnam.afm", "$rnam.tfm", "$rnam.pfb");
     push(@generated, "$snam.tfm");
@@ -669,7 +693,12 @@ unlink(glob("$temp-*.*"));
   run("$tftopl $temp-2 $temp-2");
   fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, 0);
   run("$pltotf $temp-3 $rnam");
-  push(@map_line, "$rnam $psfam-$enc <$rnam.pfb");
+  if (!$encfile_done{$enc}) {
+    make_enc_file("$rnam.afm", "$enc_prefix$enc");
+    $encfile_done{$enc} = 1;
+  }
+  $_ = "$enc_prefix$enc";
+  push(@map_line, "$rnam $psfam-$enc \"$_ ReEncodeFont\" <$_.enc <$rnam.pfb");
   #
   push(@generated, "$rnam.tfm", "$rnam.pfb");
   push(@generated, $fdx_file, $fdxa_file);
