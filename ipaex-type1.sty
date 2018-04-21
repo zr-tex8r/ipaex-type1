@@ -28,6 +28,15 @@
 %% emerge \CJKhook
 \providecommand*{\CJKhook}{}
 
+%% \bxix@chardef
+\ifx\directlua\@undefined
+  \let\bxix@chardef\mathchardef
+\else % LuaTeX
+  % NOTE: On LuaTeX, meanings of the low-value mathchardefs
+  % such as '\mathchardef"12' are given as '\mathchardef"0012'.
+  \let\bxix@chardef\chardef
+\fi
+
 %--------------------------------------- public stuffs
 
 %% \bxix@CJK@ipxm/\bxix@CJK@ipxg
@@ -118,7 +127,7 @@
     \@tempcntb\@tempcnta \divide\@tempcntb\@cclvi
     \ifnum\@tempcntb>\bxix@ovhigh \@tempcntb\bxix@ovhigh \fi
     \xdef\bxix@g@high{\the\@tempcntb}%
-    \mathchardef\bxix@tmpa\@tempcntb
+    \bxix@chardef\bxix@tmpa\@tempcntb
     \expandafter\bxix@decomp@uc@a\meaning\bxix@tmpa\relax
     \multiply\@tempcntb-\@cclvi \advance\@tempcntb\@tempcnta
     \xdef\bxix@g@low{\the\@tempcntb}%
