@@ -21,12 +21,12 @@ After that, invoke updmap as usual.
 
 ### Usage in LaTeX
 
-After installation, you can use the following two families,
+After installation, you can use the following two font families,
 
   * ipxm = IPAexMincho
   * ipxg = IPAexGothic
 
-in the folloing encodings:
+in the following encodings:
 
   * OT1 / T1 / TS1 encodings
   * `UTF8` encoding of the CJK package (internally called C70)
@@ -59,6 +59,10 @@ fonts more easily.
 
 This package is distributed under the “IPA Font License
 Agreement v1.0” (see the file named LICENSE for detail).
+
+Copyright 2003-2015 Information-technology Promotion Agency, Japan (IPA)  
+Copyright 2013-2018 Takayuki YATO (aka. "ZR")
+
 
 ipaex-type1 Package
 -------------------
@@ -117,6 +121,9 @@ CJK package and write as follows:
 Revision History
 ----------------
 
+  * Version 0.4b ‹2018/04/20›
+      - The font map is made to employ enc files.
+      - Bug fix of ipaex-type1.sty.
   * Version 0.4a ‹2016/10/20›
       - Bug fix.
   * Version 0.4  ‹2016/10/01›
@@ -136,4 +143,4 @@ Revision History
 
 --------------------
 Takayuki YATO (aka. "ZR")  
-http://zrbabbler.sp.land.to/
+https://github.com/zr-tex8r

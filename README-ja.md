@@ -59,6 +59,10 @@ ipaex-type1 バンドル 0.4 版以降では、フォントの使用をより簡
 「IPAフォントライセンスv1.0」が適用される。
 （内容は LICENSE ファイルを参照。）
 
+Copyright 2003-2015 Information-technology Promotion Agency, Japan (IPA)  
+Copyright 2013-2018 Takayuki YATO (aka. "ZR")
+
+
 ipaex-type1 パッケージ
 ----------------------
 
@@ -113,6 +117,9 @@ CJK パッケージが読込済でかつ `CJK` 環境の外で `\textCJKipxm` �
 更新履歴
 --------
 
+  * Version 0.4b ‹2018/04/20›
+      - フォントマップで enc ファイルを指定した。
+      - ipaex-type1.sty の不具合修正。
   * Version 0.4a ‹2016/10/20›
       - バグ修正。
   * Version 0.4  ‹2016/10/01›
@@ -133,4 +140,4 @@ CJK パッケージが読込済でかつ `CJK` 環境の外で `\textCJKipxm` �
 
 --------------------
 Takayuki YATO (aka. "ZR")  
-http://zrbabbler.sp.land.to/
+https://github.com/zr-tex8r
