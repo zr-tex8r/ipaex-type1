@@ -25,7 +25,7 @@ my @family_info = (
   ipxm => { ps => 'IMFCTT1', ex => 'ipaexm', p => 'ipamp' },
   ipxg => { ps => 'IGFCTT1', ex => 'ipaexg', p => 'ipagp' },
 );
-my @tex_encoding = qw(ot1 t1 ts1);
+my @tex_encoding = qw(ot1 t1 ts1 ly1);
 my $slant_ratio = ".25";
 my $default_space_width = 300;
 my $afm_dir = "afm";
@@ -51,6 +51,7 @@ my $pltotf = "pltotf";
 my (@family, %fam_info);
 my ($orig_cwd, @encoding, @generated, @map_line);
 my (%extension, %extd_enc, @nonbmp_encoding, %encfile_done);
+my (%ipaex_uvector);
 
 sub main {
   initialize(@ARGV);
@@ -140,13 +141,21 @@ sub filter_encodings {
 }
 
 sub make_enc_file {
-  my ($fafm, $encs) = @_;
-  local $_ = read_whole($fafm);
-  my @vec = m/;\s+N\s+(\S+)\s+;/g;
+  my ($enc, $encs, $fafm) = @_; my (@vec);
+  (!$encfile_done{$enc}) or return;
+  if (defined $fafm) {
+    local $_ = read_whole($fafm) or die;
+    @vec = m/;\s+N\s+(\S+)\s+;/g;
+  } elsif (defined $ipaex_uvector{$enc}){
+    @vec = map {
+      (defined $_) ? glyphname($_) : ".notdef"
+    } (@{$ipaex_uvector{$enc}});
+  } else { die; }
   (scalar(@vec) == 256) or die;
   $_ = "/$encs [\n/" . join("\n/", @vec) . "\n] def\n";
   write_whole("$encs.enc", $_);
   push(@generated, "$encs.enc");
+  $encfile_done{$enc} = 1;
 }
 
 #--------------------------------------- the batch
@@ -179,21 +188,18 @@ sub process_family {
       alert("empty afm", "$rnam.afm"); next L1;
     }
     write_whole("$temp-2.afm", $_);
-    run("$afm2tfm $temp-2 -u $temp-2");
+    my $fenc = "$enc_prefix$enc";
+    make_enc_file($enc, $fenc);
+    run("$afm2tfm $temp-2 -u -T $fenc $temp-2");
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $rnam");
     # slant
     my $snam = "$fam-ro-$enc";
-    run("$afm2tfm $temp-2 -u -s $slant_ratio $temp-2");
+    run("$afm2tfm $temp-2 -u -T $fenc -s $slant_ratio $temp-2");
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $snam");
-    # enc file
-    if (!$encfile_done{$enc}) {
-      make_enc_file("$rnam.afm", "$enc_prefix$enc");
-      $encfile_done{$enc} = 1;
-    }
     # done
     push(@generated, "$rnam.afm", "$rnam.tfm", "$rnam.pfb");
     push(@generated, "$snam.tfm");
@@ -249,8 +255,12 @@ sub apply_extension {
 
 #--------------------------------------- gen-codemap
 
-my (%ipaex_cmap, %ipaex_gname, %agl_map, %tex_cmap);
-my (%ipaex_uvector);
+# NB. ttf2pt1 fails if two characters in one place correspond to
+# the same glyph.
+
+my (%ipaex_cmap, %ipaex_gname, %ipaex_ddmap);
+my (%ipap_cmap, %ipap_gname, %ipap_ddmap);
+my (%agl_map, %tex_cmap);
 
 sub generate_codemap {
   ($extension_snowman) and use_ext_snowman();
@@ -270,21 +280,22 @@ sub prepare_for_codemap {
   local ($_);
   # %ipaex_cmap
   info("prepare ipaex cmap");
-  run("$zrotfdump_command cmap-12 $font_location/ipaexm.ttf",
+  $_ = $fam_info{$family[0]}{ex};
+  run("$zrotfdump_command cmap-12 $font_location/$_.ttf",
     "$temp-1.out");
   foreach (split(m/\n/, read_whole("$temp-1.out"))) {
     my ($uc, $gc, $gn) = (m/^(\d+)\t(\d+)\t(\w*)/) or die;
     $ipaex_cmap{$uc} = $gc; $ipaex_gname{$uc} = $gn;
   }
-  # (*) ttf2pt1 fails if twp characters in one place correspond to
-  # the same glyph, so 'hide' some characters in the font.
-  foreach (
-    0x0020, # U+0020 = U+00A0 = aj1
-    0x2011, # U+2011 = U+2010 = aj14
-    0x2012, # U+2012 = U+2010 = aj14
-    0x2EB2, # U+2EB2 = U+2EAB = aj14999
-    0x2ED6, # U+2ED6 = U+2ECF = aj15262
-  ) { delete $ipaex_cmap{$_}; delete $ipaex_gname{$_}; }
+  make_dedup_map(\%ipaex_ddmap, \%ipaex_cmap);
+  $_ = $fam_info{$family[0]}{p};
+  run("$zrotfdump_command cmap-12 $font_location/$_.ttf",
+    "$temp-1.out");
+  foreach (split(m/\n/, read_whole("$temp-1.out"))) {
+    my ($uc, $gc, $gn) = (m/^(\d+)\t(\d+)\t(\w*)/) or die;
+    $ipap_cmap{$uc} = $gc; $ipap_gname{$uc} = $gn;
+  }
+  make_dedup_map(\%ipap_ddmap, \%ipap_cmap);
   # %agl_map
   info("prepare glyph name map");
   my $agl = "$input_location/$aglfn_file";
@@ -300,12 +311,14 @@ sub prepare_for_codemap {
     my $file = "$texucsmap_location/bx-$enc.txt";
     foreach (split(m/\n/, read_whole("$file"))) {
       (m/^\#/) and next;
-      (m/<PUA>/) and next;
+      if (m/<PUA>/) {
+        my ($cc, $uc, $gn) = (m/^0x(\w+)\t0x(\w+)\t\#\((.*?)\)<PUA>/) or die;
+        $agl_map{hex($uc)} = $gn; # supplement glyph name map
+      }
       my ($cc, $uc, $n) = (m/^0x(\w+)\t0x(\w+)\t(.*)/) or die;
       $vec[hex($cc)] = hex($uc);
     }
   }
-  # See the note (*)
   $tex_cmap{t1}[0x7F] = 0x00AD;
   # these are simply bad
   undef $tex_cmap{ts1}[0x0B];
@@ -313,13 +326,23 @@ sub prepare_for_codemap {
 }
 
 sub ucsvector {
-  my ($enc) = @_;
+  my ($enc) = @_; my ($v);
   my ($x, $t) = ucs_encoding($enc);
   if ($t) {
-    $x = $x << 8; return [ $x .. ($x | 0xff) ];
+    $v = [ ($x << 8) .. ($x << 8 | 0xff) ];
   } elsif (defined $tex_cmap{$enc}) {
-    return $tex_cmap{$enc};
+    $v = [ @{$tex_cmap{$enc}} ];
   } else { die "Encoding '$enc' unknown"; }
+  # resolve aliasing inside the vector
+  my $ddmap = ($t) ? \%ipaex_ddmap : \%ipap_ddmap;
+  my %chk;
+  foreach (0..$#$v) {
+    my $uc = $ddmap->{$v->[$_]} or next;
+    my $k = $chk{$uc};
+    if (!defined $k) { $chk{$uc} = $_; next; }
+    $v->[$k] = $v->[$_] = $uc;
+  }
+  return $v;
 }
 
 sub prepare_uvector {
@@ -342,10 +365,11 @@ sub prepare_uvector {
 
 sub make_uvector {
   my ($enc) = @_; local ($_); my $ok;
+  my $cmap = (ucs_encoding($enc)) ? \%ipaex_cmap : \%ipap_cmap;
   my @vec = map {
     if (exists $extension{$_}) {
-      $ok = 1; $extd_enc{$enc} = 1; $extension{$_}[0]
-    } elsif (exists $ipaex_cmap{$_}) {
+      $ok = 1; $extd_enc{$enc} = 1; $_
+    } elsif (exists $cmap->{$_}) {
       $ok = 1; $_
     } else { undef }
   } (@{ucsvector($enc)});
@@ -360,9 +384,11 @@ sub make_cdmap_file {
 EOT
   foreach my $enc (@encoding, @nonbmp_encoding) {
     push(@ls, "plane $enc\n");
-    my $vec = $ipaex_uvector{$enc};
+    my $vec = $ipaex_uvector{$enc}; my %chk;
     for my $cc (0 .. 0xff) {
       my $uc = $vec->[$cc] or next;
+      (!defined $chk{$uc}) or next; $chk{$uc} = 1;
+      if (exists $extension{$uc}) { $uc = $extension{$uc}[0]; }
       $_ = sprintf("!%02X U+%04X %s\n", $cc, $uc & 0xFFFF, glyphname($uc));
       push(@ls, $_);
     }
@@ -385,6 +411,34 @@ sub make_map_file {
     }
   }
   push(@map_line, @ls);
+}
+
+sub make_dedup_map {
+  my ($ddmap, $cmap) = @_; my (%rcmap, %rdmap);
+  foreach (keys %$cmap) {
+    push(@{$rcmap{$cmap->{$_}}}, $_);
+  }
+  foreach (keys %rcmap) {
+    my $t = $rcmap{$_};
+    if (@$t > 1) {
+      my @tt = sort { char_priority($a) <=> char_priority($b)} (@$t);
+      $rdmap{$_} = $tt[0];
+    }
+  }
+  %$ddmap = ();
+  foreach (keys %$cmap) {
+    my $dc = $rdmap{$cmap->{$_}} or next;
+    $ddmap->{$_} = $dc;
+  }
+}
+
+sub char_priority {
+  local ($_) = @_;
+  return ($_ == 0xAD) ? ($_ + 0xF000) :
+    (0x2E80 <= $_ && $_ <= 0x2EFF) ? ($_ + 0x210000) :
+    (0x2F00 <= $_ && $_ <= 0x2FFF) ? ($_ + 0x200000) :
+    (0x2000 <= $_ && $_ <= 0x206F) ? ($_ - 0x1F00) :
+    $_;
 }
 
 #--------------------------------------- fix type1
@@ -489,12 +543,51 @@ EOT
    (LABEL O 76)
    (LIG O 76 O 24)
    (STOP)
+   (LABEL O 54)
+   (LIG O 54 O 22)
+   (STOP)
    )
 EOT
-# Character 022 is missing
-#   (LABEL O 54)
-#   (LIG O 54 O 22)
-#   (STOP)
+  'ly1' => <<'EOT',
+(LIGTABLE
+   (LABEL O 54)
+   (LIG O 54 O 204)
+   (STOP)
+   (LABEL O 140)
+   (LIG O 140 O 223)
+   (STOP)
+   (LABEL O 221)
+   (LIG O 221 O 223)
+   (STOP)
+   (LABEL O 47)
+   (LIG O 47 O 224)
+   (STOP)
+   (LABEL O 222)
+   (LIG O 222 O 224)
+   (STOP)
+   (LABEL O 55)
+   (LIG O 55 O 226)
+   (LIG O 255 O 255)
+   (STOP)
+   (LABEL O 226)
+   (LIG O 55 O 227)
+   (STOP)
+   (LABEL O 74)
+   (LIG O 74 O 253)
+   (STOP)
+   (LABEL O 76)
+   (LIG O 76 O 273)
+   (STOP)
+   (LABEL O 41)
+   (LIG O 140 O 241)
+   (LIG O 221 O 241)
+   (STOP)
+   (LABEL O 77)
+   (LIG O 140 O 277)
+   (LIG O 221 O 277)
+   (STOP)
+   )
+EOT
 );
 
 sub fix_pl_file {
@@ -583,26 +676,23 @@ sub process_family_nonbmp {
     fix_type1_file("$rnam.t1a", "$temp-1.t1a", $fam, $enc);
     run("$t1asm -b $temp-1.t1a $rnam.pfb");
     $_ = read_whole("$rnam.afm"); my $p = s/^.*\.notdef.*$//gm;
-    info($p, $rnam);
     if ($p == 256) {
       unlink("$rnam.t1a", "$rnam.pfb", "$rnam.afm");
-      alert("empty afm", "$rnam.afm"); die;next L1;
+      alert("empty afm", "$rnam.afm"); next L1;
     }
     write_whole("$temp-2.afm", $_);
-    run("$afm2tfm $temp-2 -u $temp-2");
+    my $fenc = "$enc_prefix$enc";
+    make_enc_file($enc, $fenc);
+    run("$afm2tfm $temp-2 -u -T $fenc $temp-2");
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $rnam");
     # slant
     my $snam = "$fam-ro-$enc";
-    run("$afm2tfm $temp-2 -u -s $slant_ratio $temp-2");
+    run("$afm2tfm $temp-2 -u -T $fenc -s $slant_ratio $temp-2");
     run("$tftopl $temp-2 $temp-2");
     fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, $spwd);
     run("$pltotf $temp-3 $snam");
-    if (!$encfile_done{$enc}) {
-      make_enc_file("$rnam.afm", "$enc_prefix$enc");
-      $encfile_done{$enc} = 1;
-    }
     # done
     push(@generated, "$rnam.afm", "$rnam.tfm", "$rnam.pfb");
     push(@generated, "$snam.tfm");
@@ -658,7 +748,6 @@ sub prepare_vert_data {
 }
 
 sub process_vert_family {
-unlink(glob("$temp-*.*"));
   my ($fam) = @_; local ($_);
   my $psfam = $fam_info{$fam}{ps};
   info("process family", $fam, $psfam);
@@ -693,10 +782,7 @@ unlink(glob("$temp-*.*"));
   run("$tftopl $temp-2 $temp-2");
   fix_pl_file("$temp-2.pl", "$temp-3.pl", $fam, $enc, 0);
   run("$pltotf $temp-3 $rnam");
-  if (!$encfile_done{$enc}) {
-    make_enc_file("$rnam.afm", "$enc_prefix$enc");
-    $encfile_done{$enc} = 1;
-  }
+  make_enc_file($enc, "$enc_prefix$enc", "$rnam.afm");
   $_ = "$enc_prefix$enc";
   push(@map_line, "$rnam $psfam-$enc \"$_ ReEncodeFont\" <$_.enc <$rnam.pfb");
   #
