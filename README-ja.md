@@ -9,6 +9,7 @@ IPAexフォントを Type1 形式の Unicode サブフォントに変換した�
 
   - `tfm/*.tfm`       → $TEXMF/fonts/tfm/public/ipaex-type1/
   - `type1/*.pfb`     → $TEXMF/fonts/type1/public/ipaex-type1/
+  - `enc/*.enc`       → $TEXMF/fonts/enc/dvips/ipaex-type1/
   - `ipaex-type1.map` → $TEXMF/fonts/map/dvips/ipaex-type1/
   - `*.sty`           → $TEXMF/tex/latex/ipaex-type1/
   - `*.fd`, `*.fdx`   → $TEXMF/tex/latex/ipaex-type1/
@@ -23,7 +24,7 @@ IPAexフォントを Type1 形式の Unicode サブフォントに変換した�
 
 インストールが済むと、
 
-  * OT1、T1、TS1 のエンコーディング
+  * OT1、T1、TS1、LY1 のエンコーディング
   * CJK パッケージの `UTF8` エンコーディング（C70）
 
 の各々について以下のファミリが使えるようになる。
@@ -117,6 +118,8 @@ CJK パッケージが読込済でかつ `CJK` 環境の外で `\textCJKipxm` �
 更新履歴
 --------
 
+  * Version 0.5  ‹2018/05/05›
+      - LY1 エンコーディングに対応。
   * Version 0.4b ‹2018/04/20›
       - フォントマップで enc ファイルを指定した。
       - ipaex-type1.sty の不具合修正。

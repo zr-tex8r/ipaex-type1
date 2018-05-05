@@ -11,6 +11,7 @@ Place the files in the package as follows:
 
   - `tfm/*.tfm`       → $TEXMF/fonts/tfm/public/ipaex-type1/
   - `type1/*.pfb`     → $TEXMF/fonts/type1/public/ipaex-type1/
+  - `enc/*.enc`       → $TEXMF/fonts/enc/dvips/ipaex-type1/
   - `ipaex-type1.map` → $TEXMF/fonts/map/dvips/ipaex-type1/
   - `*.sty`           → $TEXMF/tex/latex/ipaex-type1/
   - `*.fd`, `*.fdx`   → $TEXMF/tex/latex/ipaex-type1/
@@ -28,7 +29,7 @@ After installation, you can use the following two font families,
 
 in the following encodings:
 
-  * OT1 / T1 / TS1 encodings
+  * OT1 / T1 / TS1 / LY1 encodings
   * `UTF8` encoding of the CJK package (internally called C70)
 
 An example of using an alphabetic encoding.
@@ -121,6 +122,8 @@ CJK package and write as follows:
 Revision History
 ----------------
 
+  * Version 0.5  ‹2018/05/05›
+      - Support for LY1 encoding.
   * Version 0.4b ‹2018/04/20›
       - The font map is made to employ enc files.
       - Bug fix of ipaex-type1.sty.
