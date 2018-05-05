@@ -1,4 +1,4 @@
-\ProvidesFile{c70ipxma.fd}[2018/04/20 v0.4b]
+\ProvidesFile{c70ipxma.fd}[2018/05/05 v0.5]
 \DeclareFontFamily{C70}{ipxma}{\hyphenchar\font\m@ne}
 \DeclareFontShape{C70}{ipxma}{m}{n}{<->CJK*ipxm-r-u}{}
 \DeclareFontShape{C70}{ipxma}{m}{sl}{<->CJK*ipxm-ro-u}{}

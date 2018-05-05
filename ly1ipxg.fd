@@ -1,0 +1,14 @@
+\ProvidesFile{ly1ipxg.fd}[2018/05/05 v0.5]
+\DeclareFontFamily{LY1}{ipxg}{}
+\DeclareFontShape{LY1}{ipxg}{m}{n}{<->ipxg-r-ly1}{}
+\DeclareFontShape{LY1}{ipxg}{m}{sl}{<->ipxg-ro-ly1}{}
+\DeclareFontShape{LY1}{ipxg}{m}{it}{<->ssub*ipxg/m/sl}{}
+\DeclareFontShape{LY1}{ipxg}{m}{sc}{<->ssub*ipxg/m/n}{}
+\DeclareFontShape{LY1}{ipxg}{bx}{n}{<->ssub*ipxg/m/n}{}
+\DeclareFontShape{LY1}{ipxg}{bx}{sl}{<->ssub*ipxg/m/sl}{}
+\DeclareFontShape{LY1}{ipxg}{bx}{it}{<->ssub*ipxg/m/it}{}
+\DeclareFontShape{LY1}{ipxg}{bx}{sc}{<->ssub*ipxg/m/sc}{}
+\DeclareFontShape{LY1}{ipxg}{b}{n}{<->ssub*ipxg/m/n}{}
+\DeclareFontShape{LY1}{ipxg}{b}{sl}{<->ssub*ipxg/m/sl}{}
+\DeclareFontShape{LY1}{ipxg}{b}{it}{<->ssub*ipxg/m/it}{}
+\DeclareFontShape{LY1}{ipxg}{b}{sc}{<->ssub*ipxg/m/sc}{}

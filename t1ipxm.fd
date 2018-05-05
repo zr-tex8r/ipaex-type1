@@ -1,4 +1,4 @@
-\ProvidesFile{t1ipxm.fd}[2018/04/20 v0.4b]
+\ProvidesFile{t1ipxm.fd}[2018/05/05 v0.5]
 \DeclareFontFamily{T1}{ipxm}{}
 \DeclareFontShape{T1}{ipxm}{m}{n}{<->ipxm-r-t1}{}
 \DeclareFontShape{T1}{ipxm}{m}{sl}{<->ipxm-ro-t1}{}
