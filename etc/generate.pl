@@ -7,7 +7,7 @@ use File::Copy qw( copy move );
 use Time::Local 'timelocal';
 use Data::Dump 'dump';
 my $prog_name = "generate";
-my $version = "0.2.2";
+my $version = "0.3.0";
 # settings
 our $release_date = "2016/01/01";
 our $release_version = "test";
@@ -444,7 +444,7 @@ sub char_priority {
 #--------------------------------------- fix type1
 
 my $copyright = <<'EOT'; chomp($copyright);
-Copyright(c) Information-technology Promotion Agency, Japan (IPA), 2003-2012. You must accept "http://ipafont.ipa.go.jp/ipa_font_license_v1.html" to use this product.
+Copyright(c) Information-technology Promotion Agency, Japan (IPA), 2003-2015. You must accept "http://ipafont.ipa.go.jp/ipa_font_license_v1.html" to use this product.
 EOT
 
 sub type1_create_date {
