@@ -1,6 +1,7 @@
 ipxm-r-ot1 IMFCTT1-ot1 "ipxt1-ot1 ReEncodeFont" <ipxt1-ot1.enc <ipxm-r-ot1.pfb
 ipxm-r-t1 IMFCTT1-t1 "ipxt1-t1 ReEncodeFont" <ipxt1-t1.enc <ipxm-r-t1.pfb
 ipxm-r-ts1 IMFCTT1-ts1 "ipxt1-ts1 ReEncodeFont" <ipxt1-ts1.enc <ipxm-r-ts1.pfb
+ipxm-r-ly1 IMFCTT1-ly1 "ipxt1-ly1 ReEncodeFont" <ipxt1-ly1.enc <ipxm-r-ly1.pfb
 ipxm-r-u00 IMFCTT1-u00 "ipxt1-u00 ReEncodeFont" <ipxt1-u00.enc <ipxm-r-u00.pfb
 ipxm-r-u01 IMFCTT1-u01 "ipxt1-u01 ReEncodeFont" <ipxt1-u01.enc <ipxm-r-u01.pfb
 ipxm-r-u02 IMFCTT1-u02 "ipxt1-u02 ReEncodeFont" <ipxt1-u02.enc <ipxm-r-u02.pfb
@@ -265,6 +266,7 @@ ipxm-r-u02f8 IMFCTT1-u02f8 "ipxt1-u02f8 ReEncodeFont" <ipxt1-u02f8.enc <ipxm-r-u
 ipxm-ro-ot1 IMFCTT1-ot1 ".25 SlantFont ipxt1-ot1 ReEncodeFont" <ipxt1-ot1.enc <ipxm-r-ot1.pfb
 ipxm-ro-t1 IMFCTT1-t1 ".25 SlantFont ipxt1-t1 ReEncodeFont" <ipxt1-t1.enc <ipxm-r-t1.pfb
 ipxm-ro-ts1 IMFCTT1-ts1 ".25 SlantFont ipxt1-ts1 ReEncodeFont" <ipxt1-ts1.enc <ipxm-r-ts1.pfb
+ipxm-ro-ly1 IMFCTT1-ly1 ".25 SlantFont ipxt1-ly1 ReEncodeFont" <ipxt1-ly1.enc <ipxm-r-ly1.pfb
 ipxm-ro-u00 IMFCTT1-u00 ".25 SlantFont ipxt1-u00 ReEncodeFont" <ipxt1-u00.enc <ipxm-r-u00.pfb
 ipxm-ro-u01 IMFCTT1-u01 ".25 SlantFont ipxt1-u01 ReEncodeFont" <ipxt1-u01.enc <ipxm-r-u01.pfb
 ipxm-ro-u02 IMFCTT1-u02 ".25 SlantFont ipxt1-u02 ReEncodeFont" <ipxt1-u02.enc <ipxm-r-u02.pfb
@@ -529,6 +531,7 @@ ipxm-ro-u02f8 IMFCTT1-u02f8 ".25 SlantFont ipxt1-u02f8 ReEncodeFont" <ipxt1-u02f
 ipxg-r-ot1 IGFCTT1-ot1 "ipxt1-ot1 ReEncodeFont" <ipxt1-ot1.enc <ipxg-r-ot1.pfb
 ipxg-r-t1 IGFCTT1-t1 "ipxt1-t1 ReEncodeFont" <ipxt1-t1.enc <ipxg-r-t1.pfb
 ipxg-r-ts1 IGFCTT1-ts1 "ipxt1-ts1 ReEncodeFont" <ipxt1-ts1.enc <ipxg-r-ts1.pfb
+ipxg-r-ly1 IGFCTT1-ly1 "ipxt1-ly1 ReEncodeFont" <ipxt1-ly1.enc <ipxg-r-ly1.pfb
 ipxg-r-u00 IGFCTT1-u00 "ipxt1-u00 ReEncodeFont" <ipxt1-u00.enc <ipxg-r-u00.pfb
 ipxg-r-u01 IGFCTT1-u01 "ipxt1-u01 ReEncodeFont" <ipxt1-u01.enc <ipxg-r-u01.pfb
 ipxg-r-u02 IGFCTT1-u02 "ipxt1-u02 ReEncodeFont" <ipxt1-u02.enc <ipxg-r-u02.pfb
@@ -793,6 +796,7 @@ ipxg-r-u02f8 IGFCTT1-u02f8 "ipxt1-u02f8 ReEncodeFont" <ipxt1-u02f8.enc <ipxg-r-u
 ipxg-ro-ot1 IGFCTT1-ot1 ".25 SlantFont ipxt1-ot1 ReEncodeFont" <ipxt1-ot1.enc <ipxg-r-ot1.pfb
 ipxg-ro-t1 IGFCTT1-t1 ".25 SlantFont ipxt1-t1 ReEncodeFont" <ipxt1-t1.enc <ipxg-r-t1.pfb
 ipxg-ro-ts1 IGFCTT1-ts1 ".25 SlantFont ipxt1-ts1 ReEncodeFont" <ipxt1-ts1.enc <ipxg-r-ts1.pfb
+ipxg-ro-ly1 IGFCTT1-ly1 ".25 SlantFont ipxt1-ly1 ReEncodeFont" <ipxt1-ly1.enc <ipxg-r-ly1.pfb
 ipxg-ro-u00 IGFCTT1-u00 ".25 SlantFont ipxt1-u00 ReEncodeFont" <ipxt1-u00.enc <ipxg-r-u00.pfb
 ipxg-ro-u01 IGFCTT1-u01 ".25 SlantFont ipxt1-u01 ReEncodeFont" <ipxt1-u01.enc <ipxg-r-u01.pfb
 ipxg-ro-u02 IGFCTT1-u02 ".25 SlantFont ipxt1-u02 ReEncodeFont" <ipxt1-u02.enc <ipxg-r-u02.pfb
